@@ -10,6 +10,7 @@ public class TicTacToe implements ActionListener{
     private int[][] grid;
     private boolean isTurnP1;
     private JButton[][] buttonGrid;
+    private JButton resetButton;
 
     public TicTacToe() {
         f = new JFrame("Lets Play TicTacToe!");
@@ -73,10 +74,44 @@ public class TicTacToe implements ActionListener{
 
     //
     public void playGame() {
+        boolean win = false;
 
+        
+
+        while (notFull(grid)) {
+            //determine winner, draw line.
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[i].length; j++) {
+
+                }
+            }
+        }
+
+        if (notFull(grid) == false && win == false) {
+            System.out.println("There is a tie.");
+        }
+
+        //prompt if want to reset, provide a yes/no button
+        
+    }
+
+    public boolean notFull(int[][] grid) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == 0) {
+                    return true;
+                } 
+            }
+        }
+
+        return false;
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(resetButton)) {
+            reset();
+        }
+
         //loop over button grid, find the pressed button
         for (int i = 0; i < buttonGrid.length; i++) {
             for (int j = 0; j < buttonGrid[i].length; j++) {
@@ -117,6 +152,19 @@ public class TicTacToe implements ActionListener{
     //reset button
     public void reset() {
 
+        for (int[] a: grid) {
+            for (int b: a) {
+                b = 0;
+            }
+        }
+
+        for (JButton[] b: buttonGrid) {
+            for (JButton button: b) {
+                button.setText("");
+            }
+        }
+
+        isTurnP1 = true;
     }
 
 }
