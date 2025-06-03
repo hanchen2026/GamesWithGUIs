@@ -1,14 +1,15 @@
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 import javax.swing.*;
 
 
-public class TicTacToe {
+public class TicTacToe implements ActionListener{
 
     private JFrame f;
     private int[][] grid;
+    private boolean isTurnP1;
+    private JButton[][] buttonGrid;
 
     public TicTacToe() {
         f = new JFrame("Lets Play TicTacToe!");
@@ -17,6 +18,9 @@ public class TicTacToe {
 
         //tie in button events with a deterministic "int" grid.
         grid = new int[3][3];
+        buttonGrid = new JButton[3][3];
+
+        isTurnP1 = true;
     }
 
     //start the game
@@ -41,11 +45,12 @@ public class TicTacToe {
         for (int i = 0; i < 3; i++) {
 
             for (int j = 0; j < 3; j++) {
-                JButton b = new JButton();
+                buttonGrid[i][j] = new JButton();
 
-                b.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+                buttonGrid[i][j].setBorder(BorderFactory.createLineBorder(Color.black, 2));
+                buttonGrid[i][j].addActionListener(this);
 
-                grid.add(b);
+                grid.add(buttonGrid[i][j]);
 
             }
         }
@@ -66,7 +71,51 @@ public class TicTacToe {
 
     }
 
+    //
     public void playGame() {
+
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        //loop over button grid, find the pressed button
+        for (int i = 0; i < buttonGrid.length; i++) {
+            for (int j = 0; j < buttonGrid[i].length; j++) {
+                if (e.getSource().equals(buttonGrid[i][j])){
+
+                    //if already filled, immediately ignore
+                    if (grid[i][j] != 0) {
+                        return;
+                    }
+
+                    if (isTurnP1) {
+                        buttonGrid[i][j].setForeground(Color.blue);
+                        buttonGrid[i][j].setFont(new Font(Font.SERIF, Font.BOLD, 100));
+                        buttonGrid[i][j].setText("X");
+
+                        //assign grid 1 for X
+                        grid[i][j] = 1;
+
+                    }
+                    else {
+                        buttonGrid[i][j].setForeground(Color.red);
+                        buttonGrid[i][j].setFont(new Font(Font.SERIF, Font.BOLD, 100));
+                        buttonGrid[i][j].setText("O");
+
+                        //assin grid 2 for O
+                        grid[i][j] = 2;
+                    }
+
+                    isTurnP1 = !isTurnP1;
+
+
+                }
+            }
+        }
+        
+    }
+
+    //reset button
+    public void reset() {
 
     }
 
