@@ -11,6 +11,8 @@ public class TicTacToe implements ActionListener{
     private boolean isTurnP1;
     private JButton[][] buttonGrid;
     private JButton resetButton;
+    private JOptionPane optionPane;
+    private boolean gameOver;
 
     public TicTacToe() {
         f = new JFrame("Lets Play TicTacToe!");
@@ -22,6 +24,9 @@ public class TicTacToe implements ActionListener{
         buttonGrid = new JButton[3][3];
 
         isTurnP1 = true;
+
+        optionPane = new JOptionPane("Game Over! Would you like to play again?");
+        gameOver = false;
     }
 
     //start the game
@@ -74,25 +79,18 @@ public class TicTacToe implements ActionListener{
 
     //
     public void playGame() {
-        boolean win = false;
 
-        
+        // if(win == true) {
+        //     System.out.println("Win condition met.");
+        //     System.out.println("The player who won was player " + playerWhoWon);
+        // }
 
-        while (notFull(grid)) {
-            //determine winner, draw line.
-            for (int i = 0; i < grid.length; i++) {
-                for (int j = 0; j < grid[i].length; j++) {
+        // if ((notFull(grid) == false) && (win == false)) {
+        //     System.out.println("There is a tie.");
+        // }
 
-                }
-            }
-        }
+        // //prompt if want to reset, provide a yes/no button
 
-        if (notFull(grid) == false && win == false) {
-            System.out.println("There is a tie.");
-        }
-
-        //prompt if want to reset, provide a yes/no button
-        
     }
 
     public boolean notFull(int[][] grid) {
@@ -117,6 +115,11 @@ public class TicTacToe implements ActionListener{
             for (int j = 0; j < buttonGrid[i].length; j++) {
                 if (e.getSource().equals(buttonGrid[i][j])){
 
+                    //if game is over, stop:
+                    if (gameOver) {
+                        return;
+                    }
+
                     //if already filled, immediately ignore
                     if (grid[i][j] != 0) {
                         return;
@@ -129,6 +132,7 @@ public class TicTacToe implements ActionListener{
 
                         //assign grid 1 for X
                         grid[i][j] = 1;
+                        isTurnP1 = !isTurnP1;
 
                     }
                     else {
@@ -136,11 +140,62 @@ public class TicTacToe implements ActionListener{
                         buttonGrid[i][j].setFont(new Font(Font.SERIF, Font.BOLD, 100));
                         buttonGrid[i][j].setText("O");
 
-                        //assin grid 2 for O
+                        //assign grid 2 for O
                         grid[i][j] = 2;
+                        isTurnP1 = !isTurnP1;
                     }
 
-                    isTurnP1 = !isTurnP1;
+                    //check for win/tie condition here
+                    //hardcoding 8 checks, since this is a 3x3 board (3 horizontal, 3 vertical, 2 diagonal)
+
+                    //vertical
+                    if ((grid[0][0] != 0) && (grid[0][0] == grid[1][0] && grid[1][0] == grid[2][0])) {
+                        gameOver = true;
+                        System.out.println("Win condition met1v.");
+                        break;
+                    }
+                    if ((grid[0][1] != 0) && (grid[0][1] == grid[1][1] && grid[1][1] == grid[2][1])) {
+                        gameOver = true;
+                        System.out.println("Win condition met2v.");
+                        break;
+                    }
+                    if ((grid[0][2] != 0) && (grid[0][2] == grid[1][2] && grid[1][2] == grid[2][2])) {
+                        gameOver = true;
+                        System.out.println("Win condition met3v.");
+                        break;
+                    }
+
+                    //horizontal
+                    if ((grid[0][0] != 0) && (grid[0][0] == grid[0][1] && grid[0][1] == grid[0][2])) {
+                        gameOver = true;
+                        System.out.println("Win condition met1h.");
+                        break;
+                    }
+                    if ((grid[1][0] != 0) && (grid[1][0] == grid[1][1] && grid[1][1] == grid[1][2])) {
+                        gameOver = true;
+                        System.out.println("Win condition met2h.");
+                        break;
+                    }
+                    if ((grid[2][0] != 0) && (grid[2][0] == grid[2][1] && grid[2][1] == grid[2][2])) {
+                        gameOver = true;
+                        System.out.println("Win condition met3h.");
+                        break;
+                    }
+
+                    //diag
+                    if ((grid[0][0] != 0) && (grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2])) {
+                        gameOver = true;
+                        System.out.println("Win condition met1d.");
+                        break;
+                    }
+                    if ((grid[0][2] != 0) && (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0])) {
+                        gameOver = true;
+                        System.out.println("Win condition met2d.");
+                        break;
+                    }
+
+                    //quick exit to save time
+                    return;
 
 
                 }
@@ -152,9 +207,9 @@ public class TicTacToe implements ActionListener{
     //reset button
     public void reset() {
 
-        for (int[] a: grid) {
-            for (int b: a) {
-                b = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                grid[i][j] = 0;
             }
         }
 
@@ -165,6 +220,7 @@ public class TicTacToe implements ActionListener{
         }
 
         isTurnP1 = true;
+        gameOver = false;
     }
 
 }
