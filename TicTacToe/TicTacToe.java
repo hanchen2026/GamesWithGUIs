@@ -8,7 +8,7 @@ public class TicTacToe implements ActionListener{
     private int[][] grid;
     private boolean isTurnP1;
     private JButton[][] buttonGrid;
-    private JButton resetButton;
+    private JLabel turn;
     private boolean gameOver;
 
     public TicTacToe() {
@@ -22,6 +22,9 @@ public class TicTacToe implements ActionListener{
 
         isTurnP1 = true;
         gameOver = false;
+        turn = new JLabel("Player 1's turn");
+        turn.setHorizontalAlignment(SwingConstants.CENTER);
+        turn.setFont(new Font(Font.SERIF, Font.BOLD, 30));
     }
 
     //start the game
@@ -56,6 +59,7 @@ public class TicTacToe implements ActionListener{
         }
 
         f.add(grid);
+        f.add(turn, BorderLayout.SOUTH);
 
     }
 
@@ -103,6 +107,8 @@ public class TicTacToe implements ActionListener{
                         //assign grid 1 for X
                         grid[i][j] = 1;
                         isTurnP1 = !isTurnP1;
+                        turn.setText("Player 2's turn");
+
 
                     }
                     else {
@@ -113,6 +119,8 @@ public class TicTacToe implements ActionListener{
                         //assign grid 2 for O
                         grid[i][j] = 2;
                         isTurnP1 = !isTurnP1;
+                        turn.setText("Player 1's turn");
+
                     }
 
                     //check for win/tie condition here
