@@ -1,8 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 
 public class TicTacToe implements ActionListener{
 
@@ -147,17 +145,17 @@ public class TicTacToe implements ActionListener{
     public void checkVertical() {
         if ((grid[0][0] != 0) && (grid[0][0] == grid[1][0] && grid[1][0] == grid[2][0])) {
             gameOver = true;
-            drawLine();
+            drawLine(buttonGrid[0][0], buttonGrid[2][0], grid[0][0]);
             restartPrompt(grid[0][0]);
         }
         if ((grid[0][1] != 0) && (grid[0][1] == grid[1][1] && grid[1][1] == grid[2][1])) {
             gameOver = true;
-            drawLine();
+            drawLine(buttonGrid[0][1], buttonGrid[2][1], grid[0][1]);
             restartPrompt(grid[0][1]);
         }
         if ((grid[0][2] != 0) && (grid[0][2] == grid[1][2] && grid[1][2] == grid[2][2])) {
             gameOver = true;
-            drawLine();
+            drawLine(buttonGrid[0][2], buttonGrid[2][2], grid[0][2]);
             restartPrompt(grid[0][2]);
         }
     }
@@ -165,19 +163,19 @@ public class TicTacToe implements ActionListener{
     public void checkHorizontal() {
         if ((grid[0][0] != 0) && (grid[0][0] == grid[0][1] && grid[0][1] == grid[0][2])) {
             gameOver = true;
-            drawLine();
+            drawLine(buttonGrid[0][0], buttonGrid[0][2], grid[0][0]);
             restartPrompt(grid[0][0]);
 
         }
         if ((grid[1][0] != 0) && (grid[1][0] == grid[1][1] && grid[1][1] == grid[1][2])) {
             gameOver = true;
-            drawLine();
+            drawLine(buttonGrid[1][0], buttonGrid[1][2], grid[1][0]);
             restartPrompt(grid[1][0]);
 
         }
         if ((grid[2][0] != 0) && (grid[2][0] == grid[2][1] && grid[2][1] == grid[2][2])) {
             gameOver = true;
-            drawLine();
+            drawLine(buttonGrid[2][0], buttonGrid[2][2], grid[2][0]);
             restartPrompt(grid[2][0]);
 
         }
@@ -186,13 +184,13 @@ public class TicTacToe implements ActionListener{
     public void checkDiagonal() {
         if ((grid[0][0] != 0) && (grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2])) {
             gameOver = true;
-            drawLine();
+            drawLine(buttonGrid[0][0], buttonGrid[2][2], grid[1][1]);
             restartPrompt(grid[1][1]);
 
         }
         if ((grid[0][2] != 0) && (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0])) {
             gameOver = true;
-            drawLine();
+            drawLine(buttonGrid[0][2], buttonGrid[2][0], grid[1][1]);
             restartPrompt(grid[1][1]);
 
         }
@@ -214,12 +212,12 @@ public class TicTacToe implements ActionListener{
         }
         else if (result == 1) {
             //player 1 won, restart?
-            choice = JOptionPane.showConfirmDialog(f, "Player " + result + " won. Play again?", "Game Over", JOptionPane.YES_NO_OPTION);
+            choice = JOptionPane.showConfirmDialog(f, "Player " + result + "(X's) won. Play again?", "Game Over", JOptionPane.YES_NO_OPTION);
 
         }
         else {
             //player 2 won, restart?
-            choice = JOptionPane.showConfirmDialog(f, "Player " + result + " won. Play again?", "Game Over", JOptionPane.YES_NO_OPTION);
+            choice = JOptionPane.showConfirmDialog(f, "Player " + result + "(O's) won. Play again?", "Game Over", JOptionPane.YES_NO_OPTION);
         }
 
         if (choice == JOptionPane.YES_OPTION){
@@ -231,7 +229,49 @@ public class TicTacToe implements ActionListener{
     }
 
     //draws a line at victory
-    public void drawLine(){}
+    //!
+    public void drawLine(JButton a, JButton b, int winner){
+        // 1) Compute each button’s center in glass‐pane coordinates:
+        Point centerA = SwingUtilities.convertPoint(
+            a, a.getWidth()/2, a.getHeight()/2, f.getGlassPane()
+        );
+        Point centerB = SwingUtilities.convertPoint(
+            b, b.getWidth()/2, b.getHeight()/2, f.getGlassPane()
+        );
+
+        // 2) Create a one‐off transparent component whose paintComponent draws the line:
+        JComponent lineOverlay = new JComponent() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setStroke(new BasicStroke(10f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+
+                if (winner == 1) {
+                    g2.setColor(Color.BLUE);
+                }
+                else {
+                    g2.setColor(Color.RED);
+                }
+                
+                g2.drawLine(centerA.x, centerA.y, centerB.x, centerB.y);
+                g2.dispose();
+            }
+        };
+
+        // 3) Make it transparent and size it to cover the entire frame:
+        lineOverlay.setOpaque(false);
+        lineOverlay.setBounds(0, 0, f.getWidth(), f.getHeight());
+
+        // 4) Add it onto the glass pane (which is invisible by default):
+        JComponent glass = (JComponent) f.getGlassPane();
+        glass.setLayout(null);
+        glass.add(lineOverlay);
+        glass.setVisible(true);
+        glass.repaint();
+    }
+    //!
+
 
 
     //reset button
@@ -248,6 +288,14 @@ public class TicTacToe implements ActionListener{
                 button.setText("");
             }
         }
+
+        //!
+        JComponent glass = (JComponent) f.getGlassPane();
+        glass.removeAll();
+        glass.setVisible(false);
+        glass.repaint();
+        //!
+
 
         isTurnP1 = true;
         gameOver = false;
