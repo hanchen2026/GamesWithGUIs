@@ -84,9 +84,6 @@ public class TicTacToe implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(resetButton)) {
-            reset();
-        }
 
         //loop over button grid, find the pressed button
         for (int i = 0; i < buttonGrid.length; i++) {
