@@ -11,7 +11,6 @@ public class TicTacToe implements ActionListener{
     private boolean isTurnP1;
     private JButton[][] buttonGrid;
     private JButton resetButton;
-    private JOptionPane optionPane;
     private boolean gameOver;
 
     public TicTacToe() {
@@ -24,8 +23,6 @@ public class TicTacToe implements ActionListener{
         buttonGrid = new JButton[3][3];
 
         isTurnP1 = true;
-
-        optionPane = new JOptionPane("Game Over! Would you like to play again?");
         gameOver = false;
     }
 
@@ -33,7 +30,6 @@ public class TicTacToe implements ActionListener{
     public void start() {
         setBounds();
         drawGrid();
-        playGame();
     }
 
     public void setBounds() {
@@ -77,22 +73,6 @@ public class TicTacToe implements ActionListener{
 
     }
 
-    //
-    public void playGame() {
-
-        // if(win == true) {
-        //     System.out.println("Win condition met.");
-        //     System.out.println("The player who won was player " + playerWhoWon);
-        // }
-
-        // if ((notFull(grid) == false) && (win == false)) {
-        //     System.out.println("There is a tie.");
-        // }
-
-        // //prompt if want to reset, provide a yes/no button
-
-    }
-
     public boolean notFull(int[][] grid) {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
@@ -120,11 +100,6 @@ public class TicTacToe implements ActionListener{
                         return;
                     }
 
-                    //if already filled, immediately ignore
-                    if (grid[i][j] != 0) {
-                        return;
-                    }
-
                     if (isTurnP1) {
                         buttonGrid[i][j].setForeground(Color.blue);
                         buttonGrid[i][j].setFont(new Font(Font.SERIF, Font.BOLD, 100));
@@ -146,63 +121,118 @@ public class TicTacToe implements ActionListener{
                     }
 
                     //check for win/tie condition here
-                    //hardcoding 8 checks, since this is a 3x3 board (3 horizontal, 3 vertical, 2 diagonal)
 
                     //vertical
-                    if ((grid[0][0] != 0) && (grid[0][0] == grid[1][0] && grid[1][0] == grid[2][0])) {
-                        gameOver = true;
-                        System.out.println("Win condition met1v.");
-                        break;
-                    }
-                    if ((grid[0][1] != 0) && (grid[0][1] == grid[1][1] && grid[1][1] == grid[2][1])) {
-                        gameOver = true;
-                        System.out.println("Win condition met2v.");
-                        break;
-                    }
-                    if ((grid[0][2] != 0) && (grid[0][2] == grid[1][2] && grid[1][2] == grid[2][2])) {
-                        gameOver = true;
-                        System.out.println("Win condition met3v.");
-                        break;
-                    }
+                    checkVertical();
 
                     //horizontal
-                    if ((grid[0][0] != 0) && (grid[0][0] == grid[0][1] && grid[0][1] == grid[0][2])) {
-                        gameOver = true;
-                        System.out.println("Win condition met1h.");
-                        break;
-                    }
-                    if ((grid[1][0] != 0) && (grid[1][0] == grid[1][1] && grid[1][1] == grid[1][2])) {
-                        gameOver = true;
-                        System.out.println("Win condition met2h.");
-                        break;
-                    }
-                    if ((grid[2][0] != 0) && (grid[2][0] == grid[2][1] && grid[2][1] == grid[2][2])) {
-                        gameOver = true;
-                        System.out.println("Win condition met3h.");
-                        break;
-                    }
+                    checkHorizontal();
 
                     //diag
-                    if ((grid[0][0] != 0) && (grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2])) {
-                        gameOver = true;
-                        System.out.println("Win condition met1d.");
-                        break;
-                    }
-                    if ((grid[0][2] != 0) && (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0])) {
-                        gameOver = true;
-                        System.out.println("Win condition met2d.");
-                        break;
-                    }
+                    checkDiagonal();
+
+                    //tie
+                    checkTie();
 
                     //quick exit to save time
                     return;
-
-
                 }
             }
         }
         
     }
+
+    //hardcoding 8 checks, since this is a 3x3 board (3 horizontal, 3 vertical, 2 diagonal)
+
+    public void checkVertical() {
+        if ((grid[0][0] != 0) && (grid[0][0] == grid[1][0] && grid[1][0] == grid[2][0])) {
+            gameOver = true;
+            drawLine();
+            restartPrompt(grid[0][0]);
+        }
+        if ((grid[0][1] != 0) && (grid[0][1] == grid[1][1] && grid[1][1] == grid[2][1])) {
+            gameOver = true;
+            drawLine();
+            restartPrompt(grid[0][1]);
+        }
+        if ((grid[0][2] != 0) && (grid[0][2] == grid[1][2] && grid[1][2] == grid[2][2])) {
+            gameOver = true;
+            drawLine();
+            restartPrompt(grid[0][2]);
+        }
+    }
+
+    public void checkHorizontal() {
+        if ((grid[0][0] != 0) && (grid[0][0] == grid[0][1] && grid[0][1] == grid[0][2])) {
+            gameOver = true;
+            drawLine();
+            restartPrompt(grid[0][0]);
+
+        }
+        if ((grid[1][0] != 0) && (grid[1][0] == grid[1][1] && grid[1][1] == grid[1][2])) {
+            gameOver = true;
+            drawLine();
+            restartPrompt(grid[1][0]);
+
+        }
+        if ((grid[2][0] != 0) && (grid[2][0] == grid[2][1] && grid[2][1] == grid[2][2])) {
+            gameOver = true;
+            drawLine();
+            restartPrompt(grid[2][0]);
+
+        }
+    }
+
+    public void checkDiagonal() {
+        if ((grid[0][0] != 0) && (grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2])) {
+            gameOver = true;
+            drawLine();
+            restartPrompt(grid[1][1]);
+
+        }
+        if ((grid[0][2] != 0) && (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0])) {
+            gameOver = true;
+            drawLine();
+            restartPrompt(grid[1][1]);
+
+        }
+    }
+
+    public void checkTie() {
+        if (notFull(grid) == false && gameOver == false) {
+            gameOver = true;
+            restartPrompt(0);
+        }
+    }
+
+    public void restartPrompt(int result) {
+        int choice;
+
+        if (result == 0) {
+            //there was a draw, restart?
+            choice = JOptionPane.showConfirmDialog(f, "There was a tie. Play again?", "Game Over", JOptionPane.YES_NO_OPTION);
+        }
+        else if (result == 1) {
+            //player 1 won, restart?
+            choice = JOptionPane.showConfirmDialog(f, "Player " + result + " won. Play again?", "Game Over", JOptionPane.YES_NO_OPTION);
+
+        }
+        else {
+            //player 2 won, restart?
+            choice = JOptionPane.showConfirmDialog(f, "Player " + result + " won. Play again?", "Game Over", JOptionPane.YES_NO_OPTION);
+        }
+
+        if (choice == JOptionPane.YES_OPTION){
+            reset();
+        }
+        else {
+            f.dispose();
+        }
+    }
+
+    //draws a line at victory
+    public void drawLine(){}
+
 
     //reset button
     public void reset() {
