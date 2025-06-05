@@ -2,28 +2,37 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
 
 public class WordleGame {
 
     private JFrame f;
     private ArrayList<String> validWordList;
     private ArrayList<String> actualValidList;
+    private String[][] guessArr;
+    private static int count;
 
 
     public WordleGame() {
         f = new JFrame("Welcome to Wordle -- Made by Han Chen");
         validWordList = new ArrayList<>();
         actualValidList = new ArrayList<>();
+        guessArr = new String[6][5];
+        count = 0;
     }
 
     public void start() {
         initUI();
         readFiles();
+        testWordle();
     }
 
     public void initUI() {
         f.setBounds(0,0, 1600, 1300);
-        f.setVisible(true);
+        //work on gui later. set this to true once game logic works.
+        f.setVisible(false);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
@@ -51,7 +60,7 @@ public class WordleGame {
         catch (IOException e) {
             System.out.println("Something went wrong when trying to read files");
         }
-        catch(IndexOutOfBoundsException e){
+        catch (IndexOutOfBoundsException e){
             System.out.println("Trying to access an index out of bounds");
         }
         catch (Exception e) {
@@ -59,6 +68,87 @@ public class WordleGame {
         }
     }
 
+    //testing wordle without a gui
+    public void testWordle() {
+        Boolean correct = false;
+        Random rand = new Random();
+        String ans = actualValidList.get(rand.nextInt(actualValidList.size() - 1));
 
+        Scanner scan = new Scanner(System.in);
+
+        for (int i = 0; i < guessArr.length; i++) {
+
+            String guess = scan.nextLine();
+
+            //prompt to ensure valid guess
+            while (guess.length() != 5 || !validWordList.contains(guess.toLowerCase())) {
+                if (guess.length()!= 5) {
+                    System.out.println("Your guess has to be 5 letters to play wordle. Try again.");
+                }
+                else {
+                    System.out.println("\'" + guess + "\' is not a valid word. Try again. ");
+                }
+
+                guess = scan.nextLine();
+            }
+            checkWordle(guess, ans, correct);
+        
+            if (correct) {
+                System.out.println("The answer was: " + ans + ". Great job guessing right!");
+                return;
+            } 
+
+        }
+
+        scan.close();
+        System.out.println("The answer was: " + ans);
+
+    }
+
+    //verifying wordle logic:
+    public void checkWordle(String guess, String ans, boolean didGuessRight) {
+        //if exactly matches, 
+        if (guess.equals(ans)) {
+            didGuessRight = true;
+
+            return;
+        }
+
+        //'⬜'
+        //'🟨'
+        //'🟩'
+        System.out.println("Answer is: " + ans);
+        for (int i = 0; i < ans.length(); i++) {
+            char Gch = guess.charAt(i);
+            System.out.println("Gch is: " + Gch);
+            for (int j = 0; j < ans.length(); j++) {
+                char Ach = ans.charAt(j);
+                System.out.println("Ach is: " + Ach);
+                if (!ans.contains(Gch+"")) {
+                    guessArr[count][i] = "⬜";
+                    break;
+                }
+                if (Gch == Ach && i == j) {
+                    guessArr[count][i] = "🟩";
+                    break;
+                }
+                if (i != j && Ach == Gch) {
+                    guessArr[count][i] = "🟨";
+                    break;
+                }
+
+            }
+        }
+
+        count++;
+        printArr();
+    }
+
+    public void printArr() {
+        boolean allNull = true;
+        for (int i = 0; i < guessArr.length; i++) {
+            System.out.println(Arrays.toString(guessArr[i]));
+        }
+    }
 
 }
