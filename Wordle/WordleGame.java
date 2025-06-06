@@ -108,6 +108,7 @@ public class WordleGame {
     //verifying wordle logic:
     public void checkWordle(String guess, String ans, boolean didGuessRight) {
         //if exactly matches, 
+        ans = "route";
         if (guess.equals(ans)) {
             didGuessRight = true;
 
@@ -117,23 +118,34 @@ public class WordleGame {
         //'⬜'
         //'🟨'
         //'🟩'
-        System.out.println("Answer is: " + ans);
+        String copy = ans.toLowerCase();
+        System.out.println("Answer is: " + copy);
+
+
         for (int i = 0; i < ans.length(); i++) {
             char Gch = guess.charAt(i);
             System.out.println("Gch is: " + Gch);
             for (int j = 0; j < ans.length(); j++) {
-                char Ach = ans.charAt(j);
+                char Ach = copy.charAt(j);
                 System.out.println("Ach is: " + Ach);
                 if (!ans.contains(Gch+"")) {
-                    guessArr[count][i] = "⬜";
+                    guessArr[count][i] = "⬜w";
+                    System.out.println("Not found in word.");
                     break;
                 }
+
                 if (Gch == Ach && i == j) {
-                    guessArr[count][i] = "🟩";
+                    guessArr[count][i] = "🟩g";
+                    copy.replaceFirst(Ach+"", "#");
+                    System.out.println("Found Directly");
+
                     break;
                 }
-                if (i != j && Ach == Gch) {
-                    guessArr[count][i] = "🟨";
+
+                if (Ach == Gch) {
+                    guessArr[count][i] = "🟨y";
+                    copy.replaceFirst(Ach+"", "#");
+                    System.out.println("Found yellow");
                     break;
                 }
 
