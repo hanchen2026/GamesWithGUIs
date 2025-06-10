@@ -130,21 +130,21 @@ public class WordleGame {
                 // System.out.println("Ach is: " + Ach);
                 if (!copy.contains(Gch+"")) {
                     guessArr[count][i] = "⬜w";
-                    System.out.println("Not found in word.");
+                    // System.out.println("Not found in word.");
                     break;
                 }
 
                 if (Gch == Ach && i == j) {
                     guessArr[count][i] = "🟩g";
                     copy = copy.replaceFirst(Ach+"", "#");
-                    System.out.println("Found Directly");
+                    // System.out.println("Found Directly");
                     break;
                 }
 
                 if (Ach == Gch) {
                     guessArr[count][i] = "🟨y";
                     copy = copy.replaceFirst(Ach+"", "#");
-                    System.out.println("Found yellow");
+                    // System.out.println("Found yellow");
                     break;
                 }
 
