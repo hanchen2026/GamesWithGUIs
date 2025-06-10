@@ -92,9 +92,9 @@ public class WordleGame {
 
                 guess = scan.nextLine();
             }
-            checkWordle(guess, ans, correct);
+            correct = checkWordle(guess, ans, correct);
         
-            System.out.println("I have reached this line.");
+            // System.out.println("I have reached this line.");
             if (correct) {
                 System.out.println("The answer was: " + ans + ". Great job guessing right!");
                 break;
@@ -108,7 +108,7 @@ public class WordleGame {
     }
 
     //verifying wordle logic:
-    public void checkWordle(String guess, String ans, boolean didGuessRight) {
+    public boolean checkWordle(String guess, String ans, boolean didGuessRight) {
         //if exactly matches, break immediately
         if (guess.equals(ans)) {
             didGuessRight = true;
@@ -116,18 +116,18 @@ public class WordleGame {
                 guessArr[count][i] = "🟩";
             }
             printArr();
-            return;
+            return didGuessRight;
         }
 
         String copy = ans.toLowerCase();
-        System.out.println("Answer is: " + copy);
+        // System.out.println("Answer is: " + copy);
 
         for (int i = 0; i < ans.length(); i++) {
             char Gch = guess.charAt(i);
-            System.out.println("Gch is: " + Gch);
+            // System.out.println("Gch is: " + Gch);
             for (int j = 0; j < ans.length(); j++) {
                 char Ach = copy.charAt(j);
-                System.out.println("Ach is: " + Ach);
+                // System.out.println("Ach is: " + Ach);
                 if (!copy.contains(Gch+"")) {
                     guessArr[count][i] = "⬜w";
                     System.out.println("Not found in word.");
@@ -153,6 +153,8 @@ public class WordleGame {
 
         count++;
         printArr();
+
+        return didGuessRight;
     }
 
     public void printArr() {
