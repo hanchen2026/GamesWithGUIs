@@ -16,7 +16,7 @@ public class WordleGame {
 
 
     public WordleGame() {
-        f = new JFrame("Welcome to Wordle -- Made by Han Chen");
+        // f = new JFrame("Welcome to Wordle -- Made by Han Chen");
         validWordList = new ArrayList<>();
         actualValidList = new ArrayList<>();
         guessArr = new String[6][5];
@@ -24,7 +24,7 @@ public class WordleGame {
     }
 
     public void start() {
-        initUI();
+        // initUI();
         readFiles();
         testWordle();
     }
@@ -76,6 +76,7 @@ public class WordleGame {
 
         Scanner scan = new Scanner(System.in);
 
+        //loop over the attempt counts.
         for (int i = 0; i < guessArr.length; i++) {
 
             String guess = scan.nextLine();
@@ -93,9 +94,10 @@ public class WordleGame {
             }
             checkWordle(guess, ans, correct);
         
+            System.out.println("I have reached this line.");
             if (correct) {
                 System.out.println("The answer was: " + ans + ". Great job guessing right!");
-                return;
+                break;
             } 
 
         }
@@ -107,20 +109,18 @@ public class WordleGame {
 
     //verifying wordle logic:
     public void checkWordle(String guess, String ans, boolean didGuessRight) {
-        //if exactly matches, 
-        ans = "route";
+        //if exactly matches, break immediately
         if (guess.equals(ans)) {
             didGuessRight = true;
-
+            for (int i = 0; i < guessArr[0].length; i++) {
+                guessArr[count][i] = "🟩";
+            }
+            printArr();
             return;
         }
 
-        //'⬜'
-        //'🟨'
-        //'🟩'
         String copy = ans.toLowerCase();
         System.out.println("Answer is: " + copy);
-
 
         for (int i = 0; i < ans.length(); i++) {
             char Gch = guess.charAt(i);
@@ -128,7 +128,7 @@ public class WordleGame {
             for (int j = 0; j < ans.length(); j++) {
                 char Ach = copy.charAt(j);
                 System.out.println("Ach is: " + Ach);
-                if (!ans.contains(Gch+"")) {
+                if (!copy.contains(Gch+"")) {
                     guessArr[count][i] = "⬜w";
                     System.out.println("Not found in word.");
                     break;
@@ -136,15 +136,14 @@ public class WordleGame {
 
                 if (Gch == Ach && i == j) {
                     guessArr[count][i] = "🟩g";
-                    copy.replaceFirst(Ach+"", "#");
+                    copy = copy.replaceFirst(Ach+"", "#");
                     System.out.println("Found Directly");
-
                     break;
                 }
 
                 if (Ach == Gch) {
                     guessArr[count][i] = "🟨y";
-                    copy.replaceFirst(Ach+"", "#");
+                    copy = copy.replaceFirst(Ach+"", "#");
                     System.out.println("Found yellow");
                     break;
                 }
@@ -157,9 +156,16 @@ public class WordleGame {
     }
 
     public void printArr() {
-        boolean allNull = true;
         for (int i = 0; i < guessArr.length; i++) {
-            System.out.println(Arrays.toString(guessArr[i]));
+            boolean hasNull = false;
+            for (int j = 0; j < guessArr[i].length; j++) {
+                if (guessArr[i][j] == null) {
+                    hasNull = true;
+                }
+            }
+            if (hasNull == false) {
+                System.out.println(Arrays.toString(guessArr[i]));
+            }
         }
     }
 
